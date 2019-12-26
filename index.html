@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Live2d Test Env1</title>
+    <title>看板娘</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 仅demo所用，可忽略 START -->
@@ -93,7 +93,7 @@ selectAry.map((ary) => {
 });
 
 $(".selectClick").click(function(e) {
-    window.location.href = `${window.location.origin}?id=${$(this).text().toLowerCase()}`;
+    window.location.href = `${window.location.origin}${window.location.pathname}?id=${$(this).text().toLowerCase()}`;
 })
 
 function initL2Dwidget(selectId) {
@@ -120,7 +120,7 @@ function initL2Dwidget(selectId) {
             display: {
                 position: 'right'
             },
-            "model": { "jsonPath": "/packages/live2d-widget-model-" + modalName + "/assets/" + selectId + ".model.json" },
+            "model": { "jsonPath": "packages/live2d-widget-model-" + modalName + "/assets/" + selectId + ".model.json" },
             "mobile": { "show": true, scale: 0.5 },
         });
 }
