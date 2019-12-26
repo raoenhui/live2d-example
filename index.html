@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Live2d Test Env1</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 仅demo所用，可忽略 START -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- 仅demo所用，可忽略 END -->
+    <style type="text/css">
+    body {
+        padding-top: 20px;
+    }
+
+    #live2d-widget {
+        transform-origin: 100% 100% 0;
+    }
+
+    .selectClick {
+        padding: 2px 4px;
+    }
+
+    .glyphicon {
+        position: fixed !important;
+        top: 10px;
+        right: 10px;
+        border: 0;
+        z-index: 1;
+        font-size: 30px;
+        color: #000;
+    }
+
+    .octicon-mark-github {
+        right: 50px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <a href="https://www.frontendx.cn" target="_blank">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+        </a>
+        <a href="https://github.com/raoenhui/live2d-example" target="_blank">
+            <svg class="glyphicon octicon-mark-github" height="32" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+        </a>
+        <h3>看板娘为：</h3>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="btn-group">
+                    <button class="btn btn-info">haru01</button> <button data-toggle="dropdown" class="btn dropdown-toggle"><span class="caret"></span></button>
+                    <ul class="dropdown-menu"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://l2dwidget.js.org/lib/L2Dwidget.min.js"></script>
+<script type="text/javascript">
+var selectAry = [
+    ["chitose"],
+    ["Epsilon2.1", "Epsilon2_1"],
+    ["Gantzert_Felixander", "gf"],
+    ["haru01"],
+    ["haru02"],
+    ["haruto"],
+    ["hibiki"],
+    ["hijiki"],
+    ["izumi"],
+    ["koharu"],
+    ["miku"],
+    ["nico"],
+    ["ni-j"],
+    ["nipsilon"],
+    ["nito"],
+    ["shizuku"],
+    ["tororo"],
+    ["tsumiki"],
+    ["Unitychan"],
+    ["wanko"],
+    ["z16"]
+];
+
+selectAry.map((ary) => {
+    $(".dropdown-menu").append('<li class="selectClick">' + ary[0] + '</li>');
+});
+
+$(".selectClick").click(function(e) {
+    window.location.href = `${window.location.origin}?id=${$(this).text().toLowerCase()}`;
+})
+
+function initL2Dwidget(selectId) {
+    let modalName = selectAry.find((item) => { return item[0].toLowerCase() == selectId });
+    console.log('modalName', modalName)
+    modalName = modalName && modalName[1] ? modalName[1] : selectId
+
+
+    L2Dwidget
+        .on('*', (name) => {
+            console.log('%c EVENT ' + '%c -> ' + name, 'background: #222; color: yellow', 'background: #fff; color: #000')
+        })
+        .init({
+            dialog: {
+                // 开启对话框
+                enable: true,
+                script: {
+                    // 当触摸到角色身体
+                    'tap body': '哎呀！别碰我！',
+                    // 当触摸到角色头部
+                    'tap face': '人家是在认真写博客哦--前端妹子',
+                }
+            },
+            display: {
+                position: 'right'
+            },
+            "model": { "jsonPath": "/packages/live2d-widget-model-" + modalName + "/assets/" + selectId + ".model.json" },
+            "mobile": { "show": true, scale: 0.5 },
+        });
+}
+
+function getUrlQuery(name, url) {
+    if (!url) {
+        url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+let tId = getUrlQuery('id') || 'haru01';
+$('.btn-info').text(tId);
+initL2Dwidget(tId);
+
+
+// L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"log":false});
+</script>
+
+</html>
